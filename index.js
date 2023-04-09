@@ -27,7 +27,9 @@ async function init() {
   classCostructor.jsonObject = answersJsonObject.json_object
   classCostructor.immutable = answersMakeImmutable.immutable
 
+  const spinner = createSpinner('Creating class...\n').start()
   await fabricClass({ jsonObject: classCostructor.jsonObject, className: classCostructor.className, immutable: classCostructor.immutable })
+  spinner.success({ text: 'Done' })
 
 }
 
@@ -56,8 +58,7 @@ async function askJson() {
   })
 }
 
-async function fabricClass({ className, jsonObject, immutable } = {}) {
-  const spinner = createSpinner('Creating class...\n').start()
+export async function fabricClass({ className, jsonObject, immutable = false } = {}) {
 
 
   let objectKeys
@@ -85,10 +86,8 @@ async function fabricClass({ className, jsonObject, immutable } = {}) {
     constructorParams: constructorKeys,
     constructorThisKeys: constructorThisKeys,
     classCopyWithKeyValue: classCopyWithKeyValue,
-  })}
-    `
+  })}`
   );
-  spinner.success({ text: 'Done' })
 }
 
 await init()

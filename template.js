@@ -2,7 +2,7 @@ export const strict = 'use strict'
 
 export const isNull = `const isNull = (param) => param === undefined || param === null`;
 
-export const classTemplate = ({ className = 'ClassName', constructorParams, constructorThisKeys, isImmutable, classCopyWithKeyValue } = {}) => `
+export const classTemplate = ({ className = 'ClassName', constructorParams, constructorThisKeys, isImmutable = false, classCopyWithKeyValue } = {}) => `
   class ${className} {
     constructor({
       ${constructorParams}
