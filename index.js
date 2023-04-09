@@ -65,8 +65,8 @@ async function fabricClass({ className, jsonObject, immutable } = {}) {
     const rawJson = await JSON.parse(jsonObject)
     objectKeys = Object.keys(rawJson)
   } catch (error) {
-    console.error('Json format incorrect');
-    console.error(error);
+    console.error('\nJson format incorrect\n');
+    console.error(`error: ${error}`);
     process.exit(1)
   }
 
