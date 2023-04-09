@@ -2,6 +2,7 @@
 
 import inquirer from "inquirer";
 import { createSpinner } from "nanospinner";
+import { classTemplate, isNull } from "./template.js";
 
 
 
@@ -71,44 +72,22 @@ async function fabricClass({ className, jsonObject, immutable } = {}) {
 
 
   const classNameBuild = createClassName(className)
-  const constructorKeys = objectKeys.map((e) => `${e} = NULL`).join(',\n');
+  const constructorKeys = objectKeys.map((e) => `${e} = null`).join(',\n');
   const constructorThisKeys = objectKeys.map((e) => `this.${e} = isNull(${e}) ? null : ${e}`).join(';\n');
   const classCopyWithKeyValue = objectKeys.map((e) => `${e}: isNull(${e}) ? this.${e} : ${e}`).join(',\n');
 
-  console.log(`'use strict'`);
-
-  console.log(`  
-  class Null {
-    constructor() {
-      Object.seal(this)
-    }
-  }
-
-  const NULL = new Null()
-
-  const isNull = (param) => param instanceof Null
-
-  `);
 
   console.log(`
-    class ${classNameBuild} {
-      constructor({
-        ${constructorKeys}
-      } = {}) {
-        ${constructorThisKeys}
-        ${immutable ? 'Object.seal(this)' : ''}
-      }
-
-      copyWith({ 
-        ${constructorKeys}
-       } = {}) {
-        return new ${classNameBuild}({
-          ${classCopyWithKeyValue}
-        })
-      }
-    }
-  `);
-
+      ${isNull}
+      ${classTemplate({
+    className: classNameBuild,
+    isImmutable: immutable,
+    constructorParams: constructorKeys,
+    constructorThisKeys: constructorThisKeys,
+    classCopyWithKeyValue: classCopyWithKeyValue,
+  })}
+    `
+  );
   spinner.success({ text: 'Done' })
 }
 
