@@ -2,7 +2,7 @@
 
 import inquirer from "inquirer";
 import { createSpinner } from "nanospinner";
-import { fabricClass } from "./template.js";
+import { modelsFabric } from "./core.js";
 
 
 
@@ -25,7 +25,11 @@ async function init() {
   classCostructor.immutable = answersMakeImmutable.immutable
 
   const spinner = createSpinner('Creating class...\n').start()
-  await fabricClass({ jsonObject: classCostructor.jsonObject, className: classCostructor.className, immutable: classCostructor.immutable })
+  await modelsFabric({
+    className: classCostructor.className,
+    jsonObject: classCostructor.jsonObject,
+    immutable: classCostructor.immutable
+  })
   spinner.success({ text: 'Done' })
 
 }
