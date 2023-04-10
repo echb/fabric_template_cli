@@ -1,11 +1,15 @@
-const strict = 'use strict'
+export const strict = 'use strict'
 
-const isNull = `const isNull = (param) => param === undefined || param === null`;
+export const isNull = `const isNull = (param) => param === undefined || param === null`;
 
-const createClassName = (className) => className.split('_').map((e) => `${e.charAt(0).toUpperCase() + e.slice(1)}`).join('');
+export const createClassName = (className) => className.split('_').map((e) => `${e.charAt(0).toUpperCase() + e.slice(1)}`).join('');
 
-const classTemplate = ({ className = 'ClassName', constructorParams, constructorThisKeys, isImmutable = false, classCopyWithKeyValue } = {}) => `
-  class ${className} {
+export const classTemplate = ({ className = 'ClassName', constructorParams, constructorThisKeys, isImmutable = false, classCopyWithKeyValue, jsDocs = '' } = {}) => `
+/** @class ${className} */
+class ${className} {
+    /**
+    * @param  {({ ${jsDocs} })} [param] - Description
+    */
     constructor({
       ${constructorParams}
     } = {}) {
@@ -13,6 +17,10 @@ const classTemplate = ({ className = 'ClassName', constructorParams, constructor
       ${isImmutable ? 'Object.seal(this)' : ''}
     }
 
+    /**
+    * @param  {({ ${jsDocs} })} [param] - Description
+    * @returns {${className}} - New cloned instance of -> @class ${className}
+    */
     copyWith({ 
       ${constructorParams}
      } = {}) {
