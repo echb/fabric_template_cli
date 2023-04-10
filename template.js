@@ -4,6 +4,18 @@ export const isNull = `const isNull = (param) => param === undefined || param ==
 
 export const createClassName = (className) => className.split('_').map((e) => `${e.charAt(0).toUpperCase() + e.slice(1)}`).join('');
 
+export const parseFromArray = (isArray = false, className, initialClassPivot) => {
+  if (!isArray) return ''
+
+  return `
+  /**
+   * @param {object} obj - Object to parse
+   * @returns {Array<${className}>}
+   */
+  const ${className}ParseFabric = (obj) => obj.map((e)=> new ${initialClassPivot}(e))
+  `
+}
+
 export const classTemplate = ({ className = 'ClassName', constructorParams, constructorThisKeys, isImmutable = false, classCopyWithKeyValue, jsDocs = '' } = {}) => `
 /** @class ${className} */
 class ${className} {

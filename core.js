@@ -1,4 +1,4 @@
-import { classTemplate, createClassName, isNull } from "./template.js";
+import { classTemplate, createClassName, isNull, parseFromArray } from "./template.js";
 
 const fabricClas = async ({ className, constructorKeys, constructorThisKeys, classCopyWithKeyValue, immutable = false, jsDocs = '' } = {}) =>
   `${classTemplate({
@@ -89,24 +89,23 @@ async function JsonPropsToModelProps({ fullObject, className = null, isImmutable
 }
 
 
-
 export const modelsFabric = async ({
   className,
   jsonObject,
   immutable = false
 } = {}) => {
-
-  // const jsonObject = '[ { "n": 1, "b":[{"v":1}, {"v":2}] } ]'
   const parsedObj = await parseJson(jsonObject)
   const modelsList = await JsonPropsToModelProps({ fullObject: parsedObj, className: className, isImmutable: immutable })
+
   console.log(`
+    ${parseFromArray(isArray(parsedObj), createClassName(className), createClassName(className))}
     ${isNull}
     ${modelsList.join('')}
   `);
 }
 
 // modelsFabric({
-//   className: 'classCostructor_className',
-//   jsonObject: '{ "a": 1, "b": [{ "v": "asd" }] }',
+//   className: 'list',
+//   jsonObject: '[{ "a": 1, "b": [{ "v": "asd" }] }]',
 //   immutable: false
 // })
