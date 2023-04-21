@@ -2,53 +2,53 @@
 import { classTemplate, createClassName, parseFromArray } from "./template.js";
 // const jsonObject = '[ { "a": 1, "b":[{"v":1}, {"v":2}], "id": 905 } ]'
 // const jsonObject = '[ { "id": 905, "levelId": 60, "levelName": "PRIMARIA"} ]'
-const jsonObject = '{ "name": "Harry Potter", "city": "London", "qty": [ 1, 3, 4 ], "streets": [ { "av1": 1, "av2": 1 } ] }'
-// const jsonObject = `[
-// 	{
-// 		"name": "Harry Potter",
-// 		"city": "London",
-// 		"qty": [1, 3, 4],
-// 		"streets": [
-// 			{
-// 				"av1": 1,
-// 				"av2": 1
-// 			}
-// 		]
-// 	},
-// 	{
-// 		"name": "Don Quixote",
-// 		"city": "Madrid",
-// 		"qty": [1, 3, 4],
-// 		"streets": [
-// 			{
-// 				"av1": 1,
-// 				"av2": 1
-// 			}
-// 		]
-// 	},
-// 	{
-// 		"name": "Joan of Arc",
-// 		"city": "Paris",
-// 		"qty": [1, 3, 4],
-// 		"streets": [
-// 			{
-// 				"av1": 1,
-// 				"av2": 1
-// 			}
-// 		]
-// 	},
-// 	{
-// 		"name": "Rosa Park",
-// 		"city": "Alabama",
-// 		"qty": [1, 3, 4],
-// 		"streets": [
-// 			{
-// 				"av1": 1,
-// 				"av2": 1
-// 			}
-// 		]
-// 	}
-// ]`
+// const jsonObject = '{ "name": "Harry Potter", "city": "London", "qty": [ 1, 3, 4 ], "streets": [ { "av1": 1, "av2": 1 } ] }'
+const jsonObject = `[
+	{
+		"name": "Harry Potter",
+		"city": "London",
+		"qty": [1, 3, 4],
+		"streets": [
+			{
+				"av1": 1,
+				"av2": 1
+			}
+		]
+	},
+	{
+		"name": "Don Quixote",
+		"city": "Madrid",
+		"qty": [1, 3, 4],
+		"streets": [
+			{
+				"av1": 1,
+				"av2": 1
+			}
+		]
+	},
+	{
+		"name": "Joan of Arc",
+		"city": "Paris",
+		"qty": [1, 3, 4],
+		"streets": [
+			{
+				"av1": 1,
+				"av2": 1
+			}
+		]
+	},
+	{
+		"name": "Rosa Park",
+		"city": "Alabama",
+		"qty": [1, 3, 4],
+		"streets": [
+			{
+				"av1": 1,
+				"av2": 1
+			}
+		]
+	}
+]`
 
 const sleep = (ms = 2000) => new Promise((r) => setTimeout(r, ms));
 const isArrayWithObjInitalValue = (value) => {
