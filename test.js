@@ -2,52 +2,53 @@
 import { classTemplate, createClassName, parseFromArray } from "./template.js";
 // const jsonObject = '[ { "a": 1, "b":[{"v":1}, {"v":2}], "id": 905 } ]'
 // const jsonObject = '[ { "id": 905, "levelId": 60, "levelName": "PRIMARIA"} ]'
-const jsonObject = `[
-	{
-		"name": "Harry Potter",
-		"city": "London",
-		"qty": [1, 3, 4],
-		"streets": [
-			{
-				"av1": 1,
-				"av2": 1
-			}
-		]
-	},
-	{
-		"name": "Don Quixote",
-		"city": "Madrid",
-		"qty": [1, 3, 4],
-		"streets": [
-			{
-				"av1": 1,
-				"av2": 1
-			}
-		]
-	},
-	{
-		"name": "Joan of Arc",
-		"city": "Paris",
-		"qty": [1, 3, 4],
-		"streets": [
-			{
-				"av1": 1,
-				"av2": 1
-			}
-		]
-	},
-	{
-		"name": "Rosa Park",
-		"city": "Alabama",
-		"qty": [1, 3, 4],
-		"streets": [
-			{
-				"av1": 1,
-				"av2": 1
-			}
-		]
-	}
-]`
+const jsonObject = '{ "name": "Harry Potter", "city": "London", "qty": [ 1, 3, 4 ], "streets": [ { "av1": 1, "av2": 1 } ] }'
+// const jsonObject = `[
+// 	{
+// 		"name": "Harry Potter",
+// 		"city": "London",
+// 		"qty": [1, 3, 4],
+// 		"streets": [
+// 			{
+// 				"av1": 1,
+// 				"av2": 1
+// 			}
+// 		]
+// 	},
+// 	{
+// 		"name": "Don Quixote",
+// 		"city": "Madrid",
+// 		"qty": [1, 3, 4],
+// 		"streets": [
+// 			{
+// 				"av1": 1,
+// 				"av2": 1
+// 			}
+// 		]
+// 	},
+// 	{
+// 		"name": "Joan of Arc",
+// 		"city": "Paris",
+// 		"qty": [1, 3, 4],
+// 		"streets": [
+// 			{
+// 				"av1": 1,
+// 				"av2": 1
+// 			}
+// 		]
+// 	},
+// 	{
+// 		"name": "Rosa Park",
+// 		"city": "Alabama",
+// 		"qty": [1, 3, 4],
+// 		"streets": [
+// 			{
+// 				"av1": 1,
+// 				"av2": 1
+// 			}
+// 		]
+// 	}
+// ]`
 
 const sleep = (ms = 2000) => new Promise((r) => setTimeout(r, ms));
 const isArrayWithObjInitalValue = (value) => {
@@ -152,7 +153,7 @@ async function lo({ fullObject, className = null }) {
 
   const models = objKeysValuesSplit.objectKeys.filter((e) => isArrayWithObjInitalValue(localObj[e]))
   const models2 = await Promise.all(
-    models.map(async (e) => [parseFromArray(isArray(parsedObj), createClassName(e), createClassName(e)), await lo({ fullObject: localObj[e], className: e })])
+    models.map(async (e) => [parseFromArray(isArray(localObj[e]), createClassName(e), createClassName(e)), await lo({ fullObject: localObj[e], className: e })])
   )
 
   const gy = await fabricClass({
@@ -253,3 +254,78 @@ const ras = {
 // }
 // asda()
 // ---------
+
+const isNull = (param) => param === undefined || param === null
+
+/** @class Has */
+class Has {
+  /**
+  * @param  {({ name:string|null|undefined,city:string|null|undefined,qty:Array<number>|null|undefined,streets:Array|null|undefined })} [param] - Description
+  */
+  constructor({
+    name = null,
+    city = null,
+    qty = [],
+    streets = []
+  } = {}) {
+    this.name = isNull(name) ? null : name;
+    this.city = isNull(city) ? null : city;
+    this.qty = isNull(qty) ? null : qty;
+    this.streets = isNull(streets) ? null : StreetsList(streets);
+
+  }
+
+  /**
+  * @param  {({ name:string|null|undefined,city:string|null|undefined,qty:Array<number>|null|undefined,streets:Array|null|undefined })} [param] - Description
+  * @returns {Has} - New cloned instance of -> @class Has
+  */
+  copyWith({
+    name = null,
+    city = null,
+    qty = [],
+    streets = []
+  } = {}) {
+    return new Has({
+      name: isNull(name) ? this.name : name,
+      city: isNull(city) ? this.city : city,
+      qty: isNull(qty) ? this.qty : qty,
+      streets: isNull(streets) ? this.streets : streets
+    })
+  }
+}
+
+
+/**
+ * @param {object} obj - Object to parse
+ * @returns {Array<Streets>}
+ */
+const StreetsList = (obj) => obj.map((e) => new Streets(e))
+
+/** @class Streets */
+class Streets {
+  /**
+  * @param  {({ av1:string|null|undefined,av2:string|null|undefined })} [param] - Description
+  */
+  constructor({
+    av1 = null,
+    av2 = null
+  } = {}) {
+    this.av1 = isNull(av1) ? null : av1;
+    this.av2 = isNull(av2) ? null : av2
+
+  }
+
+  /**
+  * @param  {({ av1:string|null|undefined,av2:string|null|undefined })} [param] - Description
+  * @returns {Streets} - New cloned instance of -> @class Streets
+  */
+  copyWith({
+    av1 = null,
+    av2 = null
+  } = {}) {
+    return new Streets({
+      av1: isNull(av1) ? this.av1 : av1,
+      av2: isNull(av2) ? this.av2 : av2
+    })
+  }
+}
