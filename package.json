@@ -1,6 +1,6 @@
 {
 	"name": "fabric_template_cli",
-	"version": "1.2.1",
+	"version": "1.2.2",
 	"description": "",
 	"main": "index.js",
 	"type": "module",
@@ -11,7 +11,12 @@
 		"dev": "node .",
 		"dev:test": "node --watch test.js"
 	},
-	"keywords": [],
+	"keywords": [
+		"cli",
+		"fabric",
+		"js_type",
+		"js_model"
+	],
 	"author": "",
 	"license": "ISC",
 	"bin": "./index.js",
