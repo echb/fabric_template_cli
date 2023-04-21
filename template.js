@@ -12,7 +12,7 @@ export const parseFromArray = (isArray = false, className, initialClassPivot) =>
    * @param {object} obj - Object to parse
    * @returns {Array<${className}>}
    */
-  const ${className}ParseFabric = (obj) => obj.map((e)=> new ${initialClassPivot}(e))
+  const ${className}List = (obj) => obj.map((e)=> new ${initialClassPivot}(e))
   `
 }
 
