@@ -97,7 +97,7 @@ async function JsonPropsToModelProps({ fullObject, className = null, isImmutable
 
   const nestedValues = objKeysValuesSplit.objectKeys.filter((e) => isArrayWithObjInitalValue(localObj[e]))
   const nestedClasses = await Promise.all(
-    nestedValues.map(async (e) => [parseFromArray(isArray(fullObject), createClassName(e), createClassName(e)), await JsonPropsToModelProps({ fullObject: localObj[e], className: e })])
+    nestedValues.map(async (e) => [parseFromArray(isArray(localObj[e]), createClassName(e), createClassName(e)), await JsonPropsToModelProps({ fullObject: localObj[e], className: e })])
   )
 
   const mainClass = await fabricClass({
