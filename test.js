@@ -1,8 +1,9 @@
 
-import { classTemplate, createClassName } from "./template.js";
+import { classTemplate, createClassName, parseFromArray } from "./template.js";
+const jsonObject = '[ { "a": 1, "b":[{"v":1}, {"v":2}], "id": 905 } ]'
+// const jsonObject = '[ { "id": 905, "levelId": 60, "levelName": "PRIMARIA"} ]'
 
-const jsonObject = '[ { "a": 1, "b":[{"v":1}, {"v":2}] } ]'
-
+const sleep = (ms = 2000) => new Promise((r) => setTimeout(r, ms));
 
 // --------
 async function fabricClass({ className, constructorKeys, constructorThisKeys, classCopyWithKeyValue, immutable = false, jsDocs = '' } = {}) {
@@ -78,26 +79,27 @@ async function lo({ fullObject, className = null }) {
     return `${e}:${typeof e}|null|undefined`
   }).join(',')
 
-  const models = await Promise.all(
-    objKeysValuesSplit.objectKeys.map(async (e) => {
-      return !isArray(localObj[e])
-        ? fabricClass({
-          className: classNameBuild,
-          jsDocs: jsDocs,
-          constructorKeys,
-          constructorThisKeys,
-          classCopyWithKeyValue,
-          immutable: false
-        })
-        : await lo({ fullObject: localObj[e], className: e })
-    })
+  const models = objKeysValuesSplit.objectKeys.filter((e) => isArray(localObj[e]))
+  const models2 = await Promise.all(
+    models.map(async (e) => [parseFromArray(isArray(parsedObj), createClassName(e), createClassName(e)), await lo({ fullObject: localObj[e], className: e })])
   )
 
-  return models.flat()
+  const gy = await fabricClass({
+    className: classNameBuild,
+    jsDocs: jsDocs,
+    constructorKeys,
+    constructorThisKeys,
+    classCopyWithKeyValue,
+    immutable: false
+  })
+
+
+  return [gy, models2].flat(3)
 }
 
 const parsedObj = await parseJson(jsonObject)
 const r = await lo({ fullObject: parsedObj, className: 'a' })
+// console.log(r);
 console.log(r.join(''));
 
 
