@@ -1,4 +1,4 @@
-# Run without intall
+# Run without install
 
 - start cli -> `npx fabric_template_cli`
 
