@@ -1,6 +1,6 @@
 import { classTemplate, createClassName, isNull, parseFromArray } from "./template.js";
 
-const fabricClas = async ({ className, constructorKeys, constructorThisKeys, classCopyWithKeyValue, immutable = false, jsDocs = '' } = {}) =>
+const fabricClass = async ({ className, constructorKeys, constructorThisKeys, classCopyWithKeyValue, immutable = false, jsDocs = '' } = {}) =>
   `${classTemplate({
     className: className,
     isImmutable: immutable,
@@ -70,22 +70,21 @@ async function JsonPropsToModelProps({ fullObject, className = null, isImmutable
     return `${e}:${typeof e}|null|undefined`
   }).join(',')
 
-  const models = await Promise.all(
-    objKeysValuesSplit.objectKeys.map(async (e) => {
-      return !isArray(localObj[e])
-        ? fabricClas({
-          className: classNameBuild,
-          jsDocs: jsDocs,
-          constructorKeys,
-          constructorThisKeys,
-          classCopyWithKeyValue,
-          immutable: isImmutable
-        })
-        : await JsonPropsToModelProps({ fullObject: localObj[e], className: e })
-    })
+  const nestedValues = objKeysValuesSplit.objectKeys.filter((e) => isArray(localObj[e]))
+  const nestedClasses = await Promise.all(
+    nestedValues.map(async (e) => [parseFromArray(isArray(fullObject), createClassName(e), createClassName(e)), await JsonPropsToModelProps({ fullObject: localObj[e], className: e })])
   )
 
-  return models.flat()
+  const mainClass = await fabricClass({
+    className: classNameBuild,
+    jsDocs: jsDocs,
+    constructorKeys,
+    constructorThisKeys,
+    classCopyWithKeyValue,
+    immutable: false
+  })
+
+  return [mainClass, nestedClasses].flat(3)
 }
 
 
