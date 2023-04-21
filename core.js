@@ -13,6 +13,26 @@ const fabricClass = async ({ className, constructorKeys, constructorThisKeys, cl
 
 const isArray = (obj) => Array.isArray(obj)
 
+const isArrayWithObjInitalValue = (value) => {
+  if (!isArray(value)) {
+    return false
+  }
+
+  if (typeof value[0] === 'object') {
+    return true
+  }
+
+  return false
+}
+
+const isPrimitive = (value) => {
+  if (typeof value === 'number' || typeof value === 'boolean' || typeof value === 'string') {
+    return true
+  }
+
+  return false
+}
+
 async function parseJson(jsonString) {
   let rawJson = null
   try {
@@ -56,21 +76,26 @@ async function JsonPropsToModelProps({ fullObject, className = null, isImmutable
   ).join(',\n');
 
   const constructorThisKeys = objKeysValuesSplit.objectKeys.map((e) =>
-    !isArray(localObj[e])
+    !isArrayWithObjInitalValue(localObj[e])
       ? `this.${e} = isNull(${e}) ? null : ${e}`
-      : `this.${e} = isNull(${e}) ? null : ${e}.map((e) => new ${createClassName(e)}(e))`
+      : `this.${e} = isNull(${e}) ? null : ${createClassName(e)}List(${e});`
   )
     .join(';\n');
   const classCopyWithKeyValue = objKeysValuesSplit.objectKeys.map((e) => `${e}: isNull(${e}) ? this.${e} : ${e}`).join(',\n');
 
   const jsDocs = objKeysValuesSplit.objectKeys.map((e) => {
-    if (isArray(localObj[e])) {
-      return `${e}:Array|null|undefined`
+    if (!isArray(localObj[e])) {
+      return `${e}:${typeof e}|null|undefined`
     }
-    return `${e}:${typeof e}|null|undefined`
+
+    if (isPrimitive(localObj[e][0])) {
+      return `${e}:Array<${typeof localObj[e][0]}>|null|undefined`
+    }
+
+    return `${e}:Array|null|undefined`
   }).join(',')
 
-  const nestedValues = objKeysValuesSplit.objectKeys.filter((e) => isArray(localObj[e]))
+  const nestedValues = objKeysValuesSplit.objectKeys.filter((e) => isArrayWithObjInitalValue(localObj[e]))
   const nestedClasses = await Promise.all(
     nestedValues.map(async (e) => [parseFromArray(isArray(fullObject), createClassName(e), createClassName(e)), await JsonPropsToModelProps({ fullObject: localObj[e], className: e })])
   )
