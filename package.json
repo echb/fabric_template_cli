@@ -1,6 +1,6 @@
 {
 	"name": "fabric_template_cli",
-	"version": "1.2.3",
+	"version": "1.2.5",
 	"description": "",
 	"main": "index.js",
 	"type": "module",
@@ -17,11 +17,21 @@
 		"js_type",
 		"js_model"
 	],
-	"author": "",
+	"author": "Emmanuel",
+	"contributors": [
+		{
+			"name": "Emmanuel",
+			"url": "https://www.npmjs.com/~admirableyetti"
+		}
+	],
 	"license": "ISC",
 	"bin": "./index.js",
 	"dependencies": {
 		"inquirer": "^9.1.4",
 		"nanospinner": "^1.1.0"
+	},
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/echb/fabric_template_cli"
 	}
 }

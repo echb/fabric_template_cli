@@ -1,3 +1,10 @@
+# Fabric model builder
+
+Creates ***Models Classes*** with types in **vanilla** #***JS***
+
+<br>
+<br>
+
 # Run without install
 
 - start cli -> `npx fabric_template_cli`
