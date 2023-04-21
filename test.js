@@ -1,9 +1,74 @@
 
 import { classTemplate, createClassName, parseFromArray } from "./template.js";
-const jsonObject = '[ { "a": 1, "b":[{"v":1}, {"v":2}], "id": 905 } ]'
+// const jsonObject = '[ { "a": 1, "b":[{"v":1}, {"v":2}], "id": 905 } ]'
 // const jsonObject = '[ { "id": 905, "levelId": 60, "levelName": "PRIMARIA"} ]'
+const jsonObject = `[
+	{
+		"name": "Harry Potter",
+		"city": "London",
+		"qty": [1, 3, 4],
+		"streets": [
+			{
+				"av1": 1,
+				"av2": 1
+			}
+		]
+	},
+	{
+		"name": "Don Quixote",
+		"city": "Madrid",
+		"qty": [1, 3, 4],
+		"streets": [
+			{
+				"av1": 1,
+				"av2": 1
+			}
+		]
+	},
+	{
+		"name": "Joan of Arc",
+		"city": "Paris",
+		"qty": [1, 3, 4],
+		"streets": [
+			{
+				"av1": 1,
+				"av2": 1
+			}
+		]
+	},
+	{
+		"name": "Rosa Park",
+		"city": "Alabama",
+		"qty": [1, 3, 4],
+		"streets": [
+			{
+				"av1": 1,
+				"av2": 1
+			}
+		]
+	}
+]`
 
 const sleep = (ms = 2000) => new Promise((r) => setTimeout(r, ms));
+const isArrayWithObjInitalValue = (value) => {
+  if (!isArray(value)) {
+    return false
+  }
+
+  if (typeof value[0] === 'object') {
+    return true
+  }
+
+  return false
+}
+
+const isPrimitive = (value) => {
+  if (typeof value === 'number' || typeof value === 'boolean' || typeof value === 'string') {
+    return true
+  }
+
+  return false
+}
 
 // --------
 async function fabricClass({ className, constructorKeys, constructorThisKeys, classCopyWithKeyValue, immutable = false, jsDocs = '' } = {}) {
@@ -65,21 +130,27 @@ async function lo({ fullObject, className = null }) {
   ).join(',\n');
 
   const constructorThisKeys = objKeysValuesSplit.objectKeys.map((e) =>
-    !isArray(localObj[e])
+    !isArrayWithObjInitalValue(localObj[e])
       ? `this.${e} = isNull(${e}) ? null : ${e}`
-      : `this.${e} = isNull(${e}) ? null : ${e}.map((e) => new ${createClassName(e)}(e))`
+      : `this.${e} = isNull(${e}) ? null : ${createClassName(e)}List(${e});`
   )
     .join(';\n');
   const classCopyWithKeyValue = objKeysValuesSplit.objectKeys.map((e) => `${e}: isNull(${e}) ? this.${e} : ${e}`).join(',\n');
 
   const jsDocs = objKeysValuesSplit.objectKeys.map((e) => {
-    if (isArray(localObj[e])) {
-      return `${e}:Array|null|undefined`
+
+    if (!isArray(localObj[e])) {
+      return `${e}:${typeof e}|null|undefined`
     }
-    return `${e}:${typeof e}|null|undefined`
+
+    if (isPrimitive(localObj[e][0])) {
+      return `${e}:Array<${typeof localObj[e][0]}>|null|undefined`
+    }
+
+    return `${e}:Array|null|undefined`
   }).join(',')
 
-  const models = objKeysValuesSplit.objectKeys.filter((e) => isArray(localObj[e]))
+  const models = objKeysValuesSplit.objectKeys.filter((e) => isArrayWithObjInitalValue(localObj[e]))
   const models2 = await Promise.all(
     models.map(async (e) => [parseFromArray(isArray(parsedObj), createClassName(e), createClassName(e)), await lo({ fullObject: localObj[e], className: e })])
   )
